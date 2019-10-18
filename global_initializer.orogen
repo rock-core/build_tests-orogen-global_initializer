@@ -1,0 +1,34 @@
+name "global_initializer"
+
+OroGen::Spec::Deployment.register_global_initializer(:rock_build_tests)
+if defined?(OroGen::Gen::RTT_CPP::Deployment)
+    OroGen::Gen::RTT_CPP::Deployment.register_global_initializer(
+        :gstreamer,
+        deployment_cmake: <<~GST_DEPLOYMENT_CMAKE,
+            orogen_pkg_check_modules(plain_cxx11_package REQUIRED plain_cxx11_package)
+            include_directories(${plain_cxx11_package_INCLUDE_DIRS})
+            add_definitions(${plain_cxx11_package_CFLAGS_OTHER})
+            link_directories(${plain_cxx11_package_LIBRARY_DIRS})
+            target_link_libraries(<%= deployer.name %> ${plain_cxx11_package_LIBRARIES})
+        GST_DEPLOYMENT_CMAKE
+        global_scope: <<~GST_TOPLEVEL,
+            #include <plain_cxx11_package/Data.hpp>
+
+            extern Data global_value;
+        GST_TOPLEVEL
+        init: <<~GST_INIT,
+            global_value.value = 100;
+        GST_INIT
+        exit: <<~GST_EXIT
+            gst_deinit();
+        GST_EXIT
+    )
+end
+
+task_context "Task" do
+    needs_configuration
+    needs_global_initializer :rock_build_tests
+
+    periodic 0.1
+end
+
