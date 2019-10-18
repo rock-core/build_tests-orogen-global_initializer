@@ -3,7 +3,7 @@ name "global_initializer"
 OroGen::Spec::Deployment.register_global_initializer(:rock_build_tests)
 if defined?(OroGen::Gen::RTT_CPP::Deployment)
     OroGen::Gen::RTT_CPP::Deployment.register_global_initializer(
-        :gstreamer,
+        :rock_build_tests,
         deployment_cmake: <<~GST_DEPLOYMENT_CMAKE,
             orogen_pkg_check_modules(plain_cxx11_package REQUIRED plain_cxx11_package)
             include_directories(${plain_cxx11_package_INCLUDE_DIRS})
