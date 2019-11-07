@@ -4,6 +4,10 @@
 
 using namespace global_initializer;
 
+#include <global_initializer_dependency/Data.hpp>
+
+extern global_initializer_dependency::Data global_value;
+
 Task::Task(std::string const& name)
     : TaskBase(name)
 {
@@ -23,7 +27,9 @@ bool Task::configureHook()
 {
     if (! TaskBase::configureHook())
         return false;
-    return true;
+
+    std::cout << "Task::Task(): " << global_value.value << std::endl;
+    return (global_value.value == 100);
 }
 bool Task::startHook()
 {

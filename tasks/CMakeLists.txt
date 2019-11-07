@@ -1,6 +1,11 @@
 # Generated from orogen/lib/orogen/templates/tasks/CMakeLists.txt
 
 include(global_initializerTaskLib)
+
+orogen_pkg_check_modules(global_initializer_dependency
+                         REQUIRED global_initializer_dependency)
+include_directories(${global_initializer_dependency_INCLUDE_DIRS})
+
 ADD_LIBRARY(${GLOBAL_INITIALIZER_TASKLIB_NAME} SHARED
     ${GLOBAL_INITIALIZER_TASKLIB_SOURCES})
 add_dependencies(${GLOBAL_INITIALIZER_TASKLIB_NAME}
